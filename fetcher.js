@@ -1,0 +1,26 @@
+const args = process.argv.splice(2);
+const fs = require('fs');
+const request = require('request');
+
+setTimeout(() => {
+  request(args[0], (error, response, body) => {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+
+    fs.readFile(args[1], 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      fs.writeFile(args[1], body, err => {
+        if (err) {
+          console.error(err);
+          return;
+        } else {
+          console.log(`Downloaded and saved ${data.length} bytes to ./index.html'`);
+        }
+      });
+    });
+  });
+}, 1000);
